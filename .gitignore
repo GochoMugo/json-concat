@@ -1,0 +1,3 @@
+# for tests
+app.coffee
+dist/app.js

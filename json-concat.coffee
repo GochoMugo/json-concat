@@ -78,6 +78,7 @@ module.exports = ->
             (req, res, next) ->
                 emitter.on "next", ->
                     next()
+                    emitter.removeAllListeners "next"
                 readAndWrite()
         else
             # non-connect/non-express app
@@ -115,10 +116,14 @@ jsonFromFile = (filename) ->
                         # quit on the directory. couldnt get list of files in it
                         emitter.emit "done", null
                     else
-                        # loo thru each file and recurse it
+                        # loop thru each file and recurse it
                         for file in files
-                            if path.extname file is ".json"
+                            if path.extname(file) is ".json"
                                 jsonFromFile path.resolve(filename, file)
+
+                        # we done with this folder so we quit on it
+                        emitter.emit "done", null
+
             else if stats.isFile()
                 # file. read it content and get json from it
                 fs.readFile filename, (err, content) ->
@@ -126,9 +131,13 @@ jsonFromFile = (filename) ->
                         # quit on the file. couldnt read it
                         emitter.emit "done", null
                     else
-                        # we read the file, lets parse it
-                        json = JSON.parse content
-                        emitter.emit "done", json
+                        try
+                            # we read the file, lets try parse it
+                            json = JSON.parse content
+                            emitter.emit "done", json
+                        catch e
+                            # json could not be parsed
+                            emitter.emit "done", null
             else
                 # other file types, we dont consider them
                 emitter.emit "done", null

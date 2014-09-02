@@ -90,7 +90,8 @@ License: MIT
       if (options.middleware) {
         return function(req, res, next) {
           emitter.on("next", function() {
-            return next();
+            next();
+            return emitter.removeAllListeners("next");
           });
           return readAndWrite();
         };
@@ -125,30 +126,32 @@ License: MIT
       } else {
         if (stats.isDirectory()) {
           return fs.readdir(filename, function(err, files) {
-            var file, _i, _len, _results;
+            var file, _i, _len;
             if (err) {
               return emitter.emit("done", null);
             } else {
-              _results = [];
               for (_i = 0, _len = files.length; _i < _len; _i++) {
                 file = files[_i];
-                if (path.extname(file === ".json")) {
-                  _results.push(jsonFromFile(path.resolve(filename, file)));
-                } else {
-                  _results.push(void 0);
+                if (path.extname(file) === ".json") {
+                  jsonFromFile(path.resolve(filename, file));
                 }
               }
-              return _results;
+              return emitter.emit("done", null);
             }
           });
         } else if (stats.isFile()) {
           return fs.readFile(filename, function(err, content) {
-            var json;
+            var e, json;
             if (err) {
               return emitter.emit("done", null);
             } else {
-              json = JSON.parse(content);
-              return emitter.emit("done", json);
+              try {
+                json = JSON.parse(content);
+                return emitter.emit("done", json);
+              } catch (_error) {
+                e = _error;
+                return emitter.emit("done", null);
+              }
             }
           });
         } else {
