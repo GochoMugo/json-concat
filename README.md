@@ -15,6 +15,17 @@ A [Node.js][nodejs] module for concatenating JSON files and objects. Blends in [
 
     > npm install json-concat --save
 
+For the latest version with bug fixes and improvements, before a version bump is effected, use ([coffeescript][coffee] is required)(preferable for *nix users):
+
+    > git clone https://github.com/GochoMugo/json-concat
+    > cd json-concat
+    > make
+    > npm install ./dist
+
+To install json-concat onto your command line, you require passing the `-g` flag. You may also require some `sudo` powers to make it work.
+
+    > sudo npm install -g json-concat
+
 
 ## Usage
 
@@ -113,6 +124,7 @@ This Module and its Source code is license under the [MIT][mit] License. View *L
 
 
 [nodejs]:https://nodejs.org
+[coffee]:https://coffeescript.org
 [connect]:https://senchalabs.github.com/connect
 [express]:https://expressjs.com
 [jade]:https://jade-lang.com
