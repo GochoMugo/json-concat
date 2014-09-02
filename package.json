@@ -1,6 +1,6 @@
 {
     "name": "json-concat",
-    "version": "0.0.0-alpha",
+    "version": "0.0.0-alpha.1.0",
     "description": "concatenate json files and objects",
     "homepage": "https://github.com/GochoMugo/json-concat",
     "license": "MIT",
