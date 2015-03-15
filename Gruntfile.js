@@ -36,7 +36,7 @@ exports = module.exports = function(grunt) {
             test: {
                 expand: true,
                 cwd: "test/",
-                src: [".jshintrc"],
+                src: [".jshintrc", "data"],
                 dest: "_test/"
           }
         },
