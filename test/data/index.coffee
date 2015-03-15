@@ -5,8 +5,7 @@ result = { }
 files = fs.readdirSync(__dirname)
 
 
-for index in files
-    filename = files[index]
+for filename in files
     continue if filename is "index.js"
     lodash.assign(result, require("./" + filename))
 

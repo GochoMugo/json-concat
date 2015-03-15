@@ -7,137 +7,134 @@ License: MIT
 
 ###
 
+###
 
-# Requires
-events = require "events"
+Notes:
+
+1. A result object is reused in order to avoid creating many arrays
+   then have to join them together. This makes it faster.
+###
+
+
+
+# Built-in modules
 fs = require "fs"
 path = require "path"
 
 
-# Global Variables
-emitter = new events.EventEmitter()
-emitter.setMaxListeners 0
+###
+Concatenates content from all JSON files encountered
+This is recursive and will go into directories looking for files with
+the extension ".json"
 
+@param <filepath> - {String} path to file/directory
+@param <resultObject> - {Object} object that will hold the result (see note 1)
+@param <callback> - {Function} callback(content, contentArray)
+###
+readContent = (filepath, resultObject, callback) ->
+    filesEncountered = 0
+    filesProcessed = 0
+    resultObject.contentString ?= ""
+    resultObject.contentArray ?= []
 
-# Exports
-module.exports = ->
-    callback = null
+    encounteredFile = () -> filesEncountered++
+    processedFile = (fileContent="") ->
+        resultObject.contentString += fileContent
+        resultObject.contentArray.push(fileContent) if fileContent
+        filesProcessed++
+        callback(resultObject) if filesProcessed is filesEncountered
 
-    # Looking for Callback
-    index = 0
-    while (index < arguments.length)
-        if typeof arguments[index] is "function"
-            callback = arguments[index]
-            break
-        index++
-
-    # Once function is completed, execute callback
-    target = 0
-    done = 0
-    collectJson = []
-    emitter.on "done", (json) ->
-        done++
-        if json? then collectJson[collectJson.length] = json
-        if done is target
-            result = concat collectJson
-            if callback? then callback result
-            emitter.emit "complete", result
-    emitter.on "more", ->
-        target++
-
-    if arguments.length is 1 or arguments.length is 2 and callback?
-        target = 0
-
-        # default options
-        options =
-            src: "."
-            dest: "./concat.json"
-            middleware: false
-
-        # Getting the passed options
-        if arguments[0].src? then options.src = arguments[0].src
-        if arguments[0].dest? then options.dest = arguments[0].dest
-        if arguments[0].middleware? then options.middleware = arguments[0].middleware
-
-        # invokes reading of files and listens for completion
-        readAndWrite = ->
-            # listen for completion so we could write to file
-            emitter.on "complete", (json) ->
-                if options.dest? then fs.writeFile options.dest, JSON.stringify json
-                emitter.emit "next"
-
-            # if an array, pass thru it. Else just pass it as is
-            if typeof options.src is "object"
-                for path in options.src
-                    jsonFromFile path
-            else
-                jsonFromFile options.src
-
-        if options.middleware
-            # in a connect/express app
-            (req, res, next) ->
-                emitter.on "next", ->
-                    next()
-                    emitter.removeAllListeners "next"
-                readAndWrite()
-        else
-            # non-connect/non-express app
-            readAndWrite()
-
-
-# concatenates json objects in an array
-concat = (objs) ->
-    if objs.length isnt 0
-        string = ""
-        for obj in objs
-            string += JSON.stringify obj
-        string = string.replace /^({})*|({})*$/g, ""
-        string = string.replace /}({})*{/g, ","
-        string = string.replace /}{/g, ","
-        result = JSON.parse string
-    else
-        result = ""
-
-
-# Reads a file asynchronously and returns a JSON object if any.
-# If a folder is encountered, reads the .json files in it
-jsonFromFile = (filename) ->
-    emitter.emit "more"
-
-    fs.stat filename, (err, stats) ->
-        if err
+    read = (filepath) ->
+        encounteredFile()
+        fs.stat filepath, (err, stats) ->
             # could not get stats, quit on the file and move on
-            emitter.emit "done", null
-        else
+            return processedFile(null) if err
             if stats.isDirectory()
                 # directory. read it files. using recursion
-                fs.readdir filename, (err, files) ->
-                    if err
-                        # quit on the directory. couldnt get list of files in it
-                        emitter.emit "done", null
-                    else
-                        # loop thru each file and recurse it
-                        for file in files
-                            if path.extname(file) is ".json"
-                                jsonFromFile path.resolve(filename, file)
-
-                        # we done with this folder so we quit on it
-                        emitter.emit "done", null
-
+                fs.readdir filepath, (err, files) ->
+                    # quit on the directory. couldnt get list of files in it
+                    return processedFile(null) if err
+                    # loop thru each file and process it
+                    for file in files
+                        read path.join(filepath, file)
+                    # we done with this directory so we quit on it
+                    processedFile(null)
             else if stats.isFile()
-                # file. read it content and get json from it
-                fs.readFile filename, (err, content) ->
-                    if err
+                if path.extname(filepath) is ".json"
+                    # file. read it content and concatenate it
+                    fs.readFile filepath, { encoding: "utf8" }, (err, content) ->
                         # quit on the file. couldnt read it
-                        emitter.emit "done", null
+                        return processedFile(null) if err
+                        processedFile(content)
+                else
+                    processedFile(null)
+
+    # start the process
+    read(filepath)
+
+
+###
+Creates a new JSON object from a string of concatenated stringified
+JSON objects.
+
+@param <string> - {String} string of json
+@param <callback> - {Function} callback(validString, validObject)
+###
+concat = (contentString, contentArray, callback) ->
+    return callback("{}", {}) if contentString is ""
+    # using algorithm 1 (faster, not forgiving)
+    string = contentString.replace /^({\s*})*|({\s*})*$/g, ""
+    string = string.replace /}\s*({\s*})*\s*{/g, ","
+    string = string.replace /}\s*{/g, ","
+    try
+        callback(string, JSON.parse(string))
+    catch err
+        # we use algorithm 2 (slower, forgiving)
+        result = { }
+        for content in contentArray
+            try
+                tmp = JSON.parse(content)
+                for key, value of tmp
+                    result[key] = value
+            catch err
+        callback(JSON.stringify(result), result)
+
+
+###
+exported function
+###
+exports = module.exports = (userOptions, callback) ->
+
+    # options
+    options =
+        src: userOptions.src || process.cwd()
+        dest: userOptions.dest || "./concat.json"
+        middleware: userOptions.middleware || false
+
+    # ensure `null` is respected for options.dest
+    if userOptions.dest is null then options.dest = null
+
+    # make options.src an array
+    if typeof(options.src) is "string" then options.src = [options.src]
+
+    result = { }
+    index = 0
+    start = (callback) ->
+        next = () ->
+            readContent options.src[index], result, () ->
+                ++index
+                return next() if index < options.src.length
+                concat result.contentString, result.contentArray, (string, obj) ->
+                    if options.dest
+                        fs.writeFile options.dest, string, (err) ->
+                            callback(err, obj)
                     else
-                        try
-                            # we read the file, lets try parse it
-                            json = JSON.parse content
-                            emitter.emit "done", json
-                        catch e
-                            # json could not be parsed
-                            emitter.emit "done", null
-            else
-                # other file types, we dont consider them
-                emitter.emit "done", null
+                        callback(null, obj)
+        next()
+
+    # in a connect/express app
+    if options.middleware
+        return (req, res, next) ->
+            start((err, obj) -> next(obj || {}))
+    else
+        return start(callback)
