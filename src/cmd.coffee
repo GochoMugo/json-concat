@@ -16,5 +16,5 @@ else
     options.src.shift() # node
     options.src.shift() # file path
     options.dest  = options.src.pop() # destination file
-    jsonConcat options, (json) ->
+    jsonConcat options, (err, json) ->
         process.stdout.write "\nConcatenated to: #{options.dest}\n\n"

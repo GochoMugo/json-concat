@@ -31,6 +31,7 @@
         "grunt-mocha-test": "latest",
         "istanbul": "latest",
         "lodash": "latest",
+        "shelljs": "latest",
         "should": "latest"
     },
     "bin": {
