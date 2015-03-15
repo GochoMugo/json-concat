@@ -1,25 +1,19 @@
 
 # json-concat
 
-A [Node.js][nodejs] module for concatenating JSON files and objects. Blends in [Connect][connect], [Express][express] and your terminal.
-
-
-|Aspect|Detail|
-|------|------:|
-|Version|0.0.0-alpha|
-|Dependencies|None|
-|Last Update|2nd Sept 2014|
+A [Node.js][nodejs] module for concatenating JSON files and objects. Use in Node.js as __plain module__, in [Connect][connect] and [Express][express] as a __middleware__ and in your terminal as an __executable__.
 
 
 ## Installation
 
     > npm install json-concat --save
 
-For the latest version with bug fixes and improvements, before a version bump is effected, use ([coffeescript][coffee] is required)(preferable for *nix users):
+For the latest version with bug fixes and improvements, before a version bump is effected, use ([coffeescript][coffee] is required):
 
     > git clone https://github.com/GochoMugo/json-concat
     > cd json-concat
-    > make
+    > make # for *nix users
+    > Makefile.bat # for windows users
     > npm install ./dist
 
 To install json-concat onto your command line, you require passing the `-g` flag. You may also require some `sudo` powers to make it work.
@@ -29,24 +23,7 @@ To install json-concat onto your command line, you require passing the `-g` flag
 
 ## Usage
 
-### In Connect/Express apps
-
-```js
-
-var express    = require("express"),
-    app        = express(),
-    jsonConcat = require("json-concat");
-
-app.use(jsonConcat({
-    src: ["appVars.json", "userVars.json"],
-    dest: "./config.json",
-    middleware: true
-}));
-
-```
-
-
-### In your other apps
+### As a plain module in your apps
 
 ```js
 
@@ -61,7 +38,23 @@ jsonConcat({
 
 ```
 
-### In the Command line
+### As a middleware in Connect/Express apps
+
+```js
+
+var express    = require("express"),
+    app        = express(),
+    jsonConcat = require("json-concat");
+
+app.use(jsonConcat({
+    src: ["appVars.json", "userVars.json"],
+    dest: __dirname + "/config.json",
+    middleware: true
+}));
+
+```
+
+### As an executable in the command line
 
 ```bash
 
@@ -87,10 +80,12 @@ jsonConcat({
         * assign `null` to have no file written to
         * defaults to `./concat.json`
     * **middleware**: `true`/`false`(default). This lets the module know whether it is being used as a middleware or not
-* The **callback** receives one argument:
-    * **json**: 
+* The **callback** receives two arguments:
+    * **err**:
+        * An error object if an error does occur
+    * **json**:
         * On Sucess, the concatenated json is passed
-        *  On error, the json will be an empty string `""`
+        * On error, the json will be an empty string `""`
 * In Connect/Express apps, the concatenation is done on **server requests**
 * It is **asynchronous**, the Node.js way
 * It is **forgiving**, keeps going even when an error occurs. For example, a non-existent file or syntax errors in json files
@@ -102,10 +97,17 @@ jsonConcat({
 In most cases, while building an Express app, you will end up using [jade][jade] as your view engine. Jade allows you to pass a javascript object, which may be JSON, for external variables. Instead of writing all your variables in one file, you may distribute the variables across folders and concatenate them later into one file. Eventually passing it to the jade engine.
 
 
+## Tests and Performance
+
+[![Build Status](https://travis-ci.org/GochoMugo/json-concat.svg?branch=master)][ci] [![Coverage Status](https://coveralls.io/repos/GochoMugo/json-concat/badge.svg)](https://coveralls.io/r/GochoMugo/json-concat)
+
+To see the tests run on each commit, go to the [project's Travis page][ci]. If interested in the algorithms used, please read the notes at the beginning of [src/json-concat.coffee][main_file].
+
+
 ## TODO
 
-* Include tests
-* Allow Synchronous Execution: be called as a function with splats
+[X] Include tests
+[ ] Allow Synchronous Execution: be called as a function with splats
 
 ```js
 
@@ -115,17 +117,19 @@ In most cases, while building an Express app, you will end up using [jade][jade]
 
 ```
 
-* Get the JSON output in a pretty format i.e. with identations
+[ ] Get the JSON output in a pretty format i.e. with indentations
 
 
 ## License
 
-This Module and its Source code is license under the [MIT][mit] License. View *LICENSE* file accompanying this file.
+This Module and its Source code is license under the [MIT License][mit]. View *LICENSE* file accompanying this file.
 
 
-[nodejs]:https://nodejs.org
+[ci]:https://travis-ci.org/GochoMugo/json-concat
 [coffee]:https://coffeescript.org
 [connect]:https://senchalabs.github.com/connect
 [express]:https://expressjs.com
 [jade]:https://jade-lang.com
+[main_file]:https://github.com/GochoMugo/json-concat/blob/master/src/json-concat.coffee
 [mit]:https://opensource.org/licenses/MIT
+[nodejs]:https://nodejs.org
