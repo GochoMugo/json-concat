@@ -7,14 +7,42 @@ License: MIT
 
 ###
 
+
 ###
 
 Notes:
 
 1. A result object is reused in order to avoid creating many arrays
-   then have to join them together. This makes it faster.
+    then have to join them together. This makes it faster.
+2. Two alternative algorithms can be used to concatenate stringified
+    JSON objects:
+    i) Concatenate, use RegExp and Parse (algorithm 1)
+        - concatenate the stringified json objects
+        - use RegExp to try make the string a valid
+            stringified json object
+        - parse the result string into an object
+    ii) Parse and Join
+        - parse each string into a json object
+        - then loop through each of the objects assigning its
+            keys and values to a result object
+    Performance:
+        - I used jsperf.com to run performance test.
+        - algorithm 1 was faster than algorithm 2
+        - See test suite at http://jsperf.com/json-concat/
+    Discussion/Conclusion:
+        - Although algorithm 1 is faster, we use both. Reason
+            is that algorithm 2 is forgiving by letting us ignore
+            strings that can not be parsed into objects. algorithm
+            1 makes it hard to rescue the situation if the final
+            string can not be parsed.
+        We use algorithm 1 at first. If it fails to realize an object,
+            we turn to algorithm 2 to scavange any objects it
+            can find.
+
 ###
 
+
+"use strict"
 
 
 # Built-in modules
@@ -63,7 +91,7 @@ readContent = (filepath, resultObject, callback) ->
                     # loop thru each file and process it
                     for file in files
                         read path.join(filepath, file)
-                    # we done with this directory so we quit on it
+                    # I done with this directory so I quit on it
                     processedFile(null)
             else if stats.isFile()
                 if path.extname(filepath) is ".json"
@@ -95,7 +123,7 @@ concat = (contentString, contentArray, callback) ->
     try
         callback(string, JSON.parse(string))
     catch err
-        # we use algorithm 2 (slower, forgiving)
+        # using algorithm 2 (slow, forgiving)
         result = { }
         for content in contentArray
             try
