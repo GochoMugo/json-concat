@@ -1,3 +1,6 @@
-# for tests
-app.coffee
-dist/app.js
+# npm-installed modules
+node_modules/
+
+# distribution/compiled files
+dist/
+_test/
