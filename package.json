@@ -18,13 +18,25 @@
         "terminal"
     ],
     "author": {
-        "name": "Gocho Mugo",
+        "name": "GochoMugo",
         "email": "mugo@forfuture.co.ke",
-        "url": "https://twitter.com/Mugo_Gocho"
+        "url": "https://github.com/GochoMugo"
     },
     "main": "json-concat.js",
     "dependencies": {},
+    "devDependencies": {
+        "grunt": "latest",
+        "grunt-contrib-coffee": "latest",
+        "grunt-contrib-copy": "latest",
+        "grunt-contrib-jshint": "latest",
+        "grunt-mocha-test": "latest",
+        "istanbul": "latest",
+        "should": "latest"
+    },
     "bin": {
         "json-concat": "./cmd.js"
+    },
+    "scripts": {
+        "test": "grunt test"
     }
 }
