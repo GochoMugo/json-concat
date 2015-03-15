@@ -106,18 +106,18 @@ To see the tests run on each commit, go to the [project's Travis page][ci]. If i
 
 ## TODO
 
-[X] Include tests
-[ ] Allow Synchronous Execution: be called as a function with splats
+- [X] Include tests (v0.0.0)
+- [ ] Allow Synchronous Execution: be called as a function with splats
 
 ```js
 
-    // invoke directly as a function
-    var json = jsonConcat("appVars.json", "userVars.json", {"name": "@mugo_gocho"});
-    console.log(json);
+// Just an example
+var json = jsonConcat("appVars.json", "userVars.json", {"name": "@mugo_gocho"});
+console.log(json);
 
 ```
 
-[ ] Get the JSON output in a pretty format i.e. with indentations
+- [ ] Get the JSON output in a pretty format i.e. with indentations
 
 
 ## License
