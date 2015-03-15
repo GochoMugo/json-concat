@@ -44,6 +44,12 @@ readContent = (filepath, resultObject, callback) ->
         filesProcessed++
         callback(resultObject) if filesProcessed is filesEncountered
 
+    # special case(s)
+    if typeof(filepath) is "object"
+        resultObject.contentString += JSON.stringify(filepath)
+        resultObject.contentArray.push(filepath)
+        return callback(resultObject)
+
     read = (filepath) ->
         encounteredFile()
         fs.stat filepath, (err, stats) ->

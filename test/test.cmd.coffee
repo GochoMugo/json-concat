@@ -38,12 +38,10 @@ describe "json-concat command", () ->
             wrap(__dirname + "/data/recursive/c.json") + " " +
             wrap(__dirname + "/data/recursive/a") + " " +
             wrap(outputFile), (code, output) ->
-                setTimeout ->
-                    should(code).eql(0)
-                    data = fs.readFileSync(outputFile, encoding: "utf8")
-                    should(JSON.parse(data)).eql(require("./data/recursive"))
-                    done()
-                , 0
+                should(code).eql(0)
+                data = fs.readFileSync(outputFile, encoding: "utf8")
+                should(JSON.parse(data)).eql(require("./data/recursive"))
+                done()
 
     it "shows usage information if no arg is passed", (done) ->
         ret = shelljs.exec cmd, (code, output) ->

@@ -6,6 +6,7 @@ fs = require "fs"
 
 
 # npm-installed modules
+lodash = require "lodash"
 should = require "should"
 
 
@@ -65,6 +66,17 @@ describe "jsonConcat options", () ->
         correct_result = require("./data/recursive")
         jsonConcat
             src: [__dirname + "/data/recursive/a", __dirname + "/data/recursive/c.json"],
+            dest: null
+        , (err, json) ->
+            should(err).not.be.ok
+            should(json).eql(correct_result)
+            done()
+
+    it ".src may be an array with object(s)", (done) ->
+        correct_result = lodash.cloneDeep(require "./data/file.json")
+        correct_result["awesome"] = true
+        jsonConcat
+            src: [__dirname + "/data/file.json", awesome: true],
             dest: null
         , (err, json) ->
             should(err).not.be.ok
