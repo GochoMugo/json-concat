@@ -1,7 +1,7 @@
 
 # json-concat
 
-A [Node.js][nodejs] module for concatenating JSON files and objects. Blends in [Connect][connect], [Express][express] and your terminal.
+A [Node.js][nodejs] module for concatenating JSON files and objects. Use in Node.js as __plain module__, in [Connect][connect] and [Express][express] as a __middleware__ and in your terminal as an __executable__.
 
 
 |Aspect|Detail|
@@ -39,7 +39,7 @@ var express    = require("express"),
 
 app.use(jsonConcat({
     src: ["appVars.json", "userVars.json"],
-    dest: "./config.json",
+    dest: __dirname + "/config.json",
     middleware: true
 }));
 
@@ -120,7 +120,7 @@ In most cases, while building an Express app, you will end up using [jade][jade]
 
 ## License
 
-This Module and its Source code is license under the [MIT][mit] License. View *LICENSE* file accompanying this file.
+This Module and its Source code is license under the [MIT License][mit]. View *LICENSE* file accompanying this file.
 
 
 [nodejs]:https://nodejs.org
