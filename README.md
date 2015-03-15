@@ -99,7 +99,7 @@ In most cases, while building an Express app, you will end up using [jade][jade]
 
 ## Tests and Performance
 
-[![Build Status](https://travis-ci.org/GochoMugo/json-concat.svg?branch=develop)][ci] [![Coverage Status](https://coveralls.io/repos/GochoMugo/json-concat/badge.svg)](https://coveralls.io/r/GochoMugo/json-concat)
+[![Build Status](https://travis-ci.org/GochoMugo/json-concat.svg?branch=master)][ci] [![Coverage Status](https://coveralls.io/repos/GochoMugo/json-concat/badge.svg)](https://coveralls.io/r/GochoMugo/json-concat)
 
 To see the tests run on each commit, go to the [project's Travis page][ci]. If interested in the algorithms used, please read the notes at the beginning of [src/json-concat.coffee][main_file].
 
