@@ -31,6 +31,7 @@
         "grunt-contrib-jshint": "latest",
         "grunt-mocha-test": "latest",
         "istanbul": "latest",
+        "lodash": "latest",
         "should": "latest"
     },
     "bin": {
