@@ -3,7 +3,7 @@
 
 jsonConcat = require "./json-concat"
 
-console.log "==>", process.argv
+
 if process.argv.length is 2
     # No argument passed
     process.stdout.write "\nUsage: json-concat file1.json file2.json dir1 dir2 ... output.json\n\n"
