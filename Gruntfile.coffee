@@ -15,6 +15,7 @@ exports = module.exports = (grunt) ->
                 expand: true,
                 flatten: false,
                 ext: ".js"
+                extDot: "last",
                 cwd: "src/",
                 src: ["**/*.coffee"],
                 dest: "dist/"
@@ -22,6 +23,7 @@ exports = module.exports = (grunt) ->
                 expand: true,
                 flatten: false,
                 ext: ".js"
+                extDot: "last",
                 cwd: "test/",
                 src: ["**/*.coffee"],
                 dest: "_test/"
