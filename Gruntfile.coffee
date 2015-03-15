@@ -13,16 +13,13 @@ exports = module.exports = (grunt) ->
         coffee:
             options:
                 expand: true,
-                flatten: true,
                 ext: ".js"
             src:
-                cwd: "src/",
-                src: ["*.coffee"],
+                src: ["src/*.coffee"],
                 dest: "dist/"
             test:
-                cwd: "test/",
-                src: ["*.coffee"],
-                dest: "dist/"
+                src: ["test/*.coffee"],
+                dest: "_test/"
         copy:
             dist:
                 expand: true,
