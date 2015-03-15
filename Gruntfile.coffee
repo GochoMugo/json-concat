@@ -11,14 +11,19 @@ exports = module.exports = (grunt) ->
 
     grunt.initConfig
         coffee:
-            options:
-                expand: true,
-                ext: ".js"
             src:
-                src: ["src/*.coffee"],
+                expand: true,
+                flatten: false,
+                ext: ".js"
+                cwd: "src/",
+                src: ["**/*.coffee"],
                 dest: "dist/"
             test:
-                src: ["test/*.coffee"],
+                expand: true,
+                flatten: false,
+                ext: ".js"
+                cwd: "test/",
+                src: ["**/*.coffee"],
                 dest: "_test/"
         copy:
             dist:
@@ -28,7 +33,7 @@ exports = module.exports = (grunt) ->
             test:
                 expand: true,
                 cwd: "test/",
-                src: [".jshintrc", "data"],
+                src: ["data/**/*", "!data/**/*.coffee"],
                 dest: "_test/"
         mochaTest:
             test:
@@ -36,7 +41,7 @@ exports = module.exports = (grunt) ->
                     reporter: 'spec',
                     quiet: false,
                     clearRequireCache: false
-                src: ['_test/test.*.js']
+                src: ['_test/test_*.js']
 
     grunt.loadNpmTasks("grunt-contrib-coffee")
     grunt.loadNpmTasks("grunt-contrib-copy")
