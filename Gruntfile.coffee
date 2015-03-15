@@ -43,7 +43,7 @@ exports = module.exports = (grunt) ->
                     reporter: 'spec',
                     quiet: false,
                     clearRequireCache: false
-                src: ['_test/test_*.js']
+                src: ['_test/test.*.js']
 
     grunt.loadNpmTasks("grunt-contrib-coffee")
     grunt.loadNpmTasks("grunt-contrib-copy")
