@@ -6,7 +6,7 @@ node_js:
 before_install: npm install -g grunt-cli
 script: npm test
 after_script: NODE_ENV=test npm install coveralls mocha-lcov-reporter && ./node_modules/.bin/istanbul
-  cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info
+  cover ./node_modules/mocha/bin/_mocha _test/ --report lcovonly -- -R spec && cat ./coverage/lcov.info
   | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 before_deploy:
 - grunt

@@ -8,3 +8,6 @@ _test/
 # files created during testing
 concat.json
 _test*
+
+# istanbul coverage
+coverage/
