@@ -22,7 +22,7 @@
     "email": "mugo@forfuture.co.ke",
     "url": "https://github.com/GochoMugo"
   },
-  "main": "json-concat.js",
+  "main": "lib/json-concat.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -37,10 +37,9 @@
     "should": "~8.2.2"
   },
   "bin": {
-    "json-concat": "./cmd.js"
+    "json-concat": "./bin/json-concat"
   },
   "scripts": {
-    "clean": "shjs",
     "test": "grunt test"
   }
 }
