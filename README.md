@@ -1,24 +1,23 @@
 
 # json-concat
 
-A [Node.js][nodejs] module for concatenating JSON files and objects. Use in Node.js as __plain module__, in [Connect][connect] and [Express][express] as a __middleware__ and in your terminal as an __executable__.
+A [Node.js][nodejs] module for concatenating JSON files and objects. Use it in
+Node.js as a __plain, old module__, in [Connect][connect] and [Express][express]
+as a __middleware__ and in your terminal as an __executable__.
 
 
 ## Installation
 
-    > npm install json-concat --save
+```bash
+$ npm install json-concat --save
+```
 
-For the latest version with bug fixes and improvements, before a version bump is effected, use ([coffeescript][coffee] is required):
+To install json-concat onto your command line, you may require passing the
+`-g` flag. You may also require some `sudo` powers to make it work.
 
-    > git clone https://github.com/GochoMugo/json-concat
-    > cd json-concat
-    > make # for *nix users
-    > Makefile.bat # for windows users
-    > npm install ./dist
-
-To install json-concat onto your command line, you require passing the `-g` flag. You may also require some `sudo` powers to make it work.
-
-    > sudo npm install -g json-concat
+```bash
+$ sudo npm install -g json-concat
+```
 
 
 ## Usage
@@ -57,29 +56,29 @@ app.use(jsonConcat({
 ### As an executable in the command line
 
 ```bash
-
 # As simple as this. Output file should be last
-> json-concat file1.json file2.json ouput.json
+$ json-concat file1.json file2.json ouput.json
 
 # for usage tip, invoke with no args
-> json-concat
-
-
+$ json-concat
 ```
+
 
 ## Notes
 
 * The options object passed may have the following keys:
     * **src**:
-        * path pointing to a folder
-        * array of paths pointing to files or folders
+        * (String) path pointing to a directory
+        * (Array) array of paths pointing to files and/or directories
         * defaults to `.` (current working directory)
-        * **Note:** if this points to a file, nothing will be done.
-    * **dest**: 
-        * path pointing to a file in which the JSON output will be written to
-        * assign `null` to have no file written to
+        * **Note:** if this is a path points to a single file, nothing will be done.
+    * **dest**:
+        * (String) path pointing to a file in which the JSON output will be written to
+        * (Null) assign `null` to have **no** file written to
         * defaults to `./concat.json`
-    * **middleware**: `true`/`false`(default). This lets the module know whether it is being used as a middleware or not
+    * **middleware**:
+        * (Boolean) whether it is being used as a middleware or not
+        * defaults to `false`
 * The **callback** receives two arguments:
     * **err**:
         * An error object if an error does occur
@@ -94,19 +93,26 @@ app.use(jsonConcat({
 
 ## Use Cases
 
-In most cases, while building an Express app, you will end up using [jade][jade] as your view engine. Jade allows you to pass a javascript object, which may be JSON, for external variables. Instead of writing all your variables in one file, you may distribute the variables across folders and concatenate them later into one file. Eventually passing it to the jade engine.
+In most cases, while building an Express app, you will end up using
+[jade][jade] as your view engine. Jade allows you to pass a javascript
+object, which may be JSON, for external variables. Instead of writing all
+your variables in one file, you may distribute the variables across
+directories and concatenate them later into one file. Eventually passing
+it to the jade engine.
 
 
 ## Tests and Performance
 
 [![Build Status](https://travis-ci.org/GochoMugo/json-concat.svg?branch=master)][ci] [![Coverage Status](https://coveralls.io/repos/GochoMugo/json-concat/badge.svg)](https://coveralls.io/r/GochoMugo/json-concat)
 
-To see the tests run on each commit, go to the [project's Travis page][ci]. If interested in the algorithms used, please read the notes at the beginning of [src/json-concat.coffee][main_file].
+To see the tests run on each commit, go to the [project's Travis page][ci].
+If interested in the algorithms used, please read the notes at the beginning
+of [src/json-concat.coffee][main_file].
 
 
 ## TODO
 
-- [X] Include tests (v0.0.0)
+- [x] Include tests (v0.0.0)
 - [ ] Allow Synchronous Execution: be called as a function with splats
 
 ```js
@@ -122,7 +128,9 @@ console.log(json);
 
 ## License
 
-This Module and its Source code is license under the [MIT License][mit]. View *LICENSE* file accompanying this file.
+**The MIT License (MIT)**
+
+**Copyright &copy; 2014-2016 GochoMugo <mugo@forfuture.co.ke>**
 
 
 [ci]:https://travis-ci.org/GochoMugo/json-concat
