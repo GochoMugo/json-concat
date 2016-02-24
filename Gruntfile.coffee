@@ -11,7 +11,7 @@ exports = module.exports = (grunt) ->
 
     grunt.initConfig
         clean:
-            test: [".test/"]
+            test: [".test/", "concat.json"]
         coffee:
             src:
                 expand: true,

@@ -3,6 +3,7 @@
 
 # built-in modules
 fs = require "fs"
+path = require "path"
 
 
 # npm-installed modules
@@ -11,7 +12,7 @@ should = require "should"
 
 
 # own modules
-jsonConcat = require "../dist/json-concat"
+jsonConcat = require "../lib/json-concat"
 
 
 describe "jsonConcat", () ->
@@ -22,7 +23,7 @@ describe "jsonConcat", () ->
     it "is recursive", (done) ->
         correct_result = require("./data/recursive")
         jsonConcat
-            src: __dirname + "/data/recursive",
+            src: path.join(__dirname, "data/recursive"),
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -32,7 +33,7 @@ describe "jsonConcat", () ->
     it "is forgiving", (done) ->
         correct_result = require("./data/forgiving")
         jsonConcat
-            src: __dirname + "/data/forgiving",
+            src: path.join(__dirname, "data/forgiving"),
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -45,7 +46,7 @@ describe "jsonConcat options", () ->
     it ".src may be a path pointing to a directory", (done) ->
         correct_result = require("./data/dir")
         jsonConcat
-            src: __dirname + "/data/dir",
+            src: path.join(__dirname, "data/dir"),
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -55,7 +56,7 @@ describe "jsonConcat options", () ->
     it ".src may be a path pointing to a file", (done) ->
         correct_result = require("./data/file.json")
         jsonConcat
-            src: __dirname + "/data/file.json",
+            src: path.join(__dirname, "data/file.json"),
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -65,7 +66,10 @@ describe "jsonConcat options", () ->
     it ".src may be an array of filepaths", (done) ->
         correct_result = require("./data/recursive")
         jsonConcat
-            src: [__dirname + "/data/recursive/a", __dirname + "/data/recursive/c.json"],
+            src: [
+                path.join(__dirname, "data/recursive/a"),
+                path.join(__dirname, "data/recursive/c.json")
+            ],
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -76,7 +80,10 @@ describe "jsonConcat options", () ->
         correct_result = lodash.cloneDeep(require "./data/file.json")
         correct_result["awesome"] = true
         jsonConcat
-            src: [__dirname + "/data/file.json", awesome: true],
+            src: [
+                path.join(__dirname, "data/file.json"),
+                awesome: true
+            ],
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -92,9 +99,9 @@ describe "jsonConcat options", () ->
 
     it ".dest defines file to write to", (done) ->
         correct_result = require("./data/file.json")
-        destpath = __dirname + "/_test_dest.json"
+        destpath = path.join __dirname, "dest.json"
         jsonConcat
-            src: __dirname + "/data/file.json",
+            src: path.join(__dirname, "data/file.json"),
             dest: destpath
         , (err, json) ->
             should(err).not.be.ok
@@ -119,7 +126,7 @@ describe "jsonConcat options", () ->
         if (fs.existsSync(defaultPath))
             fs.unlinkSync(defaultPath)
         jsonConcat
-            src: __dirname + "/data/file.json",
+            src: path.join(__dirname, "/data/file.json"),
             dest: null
         , (err, json) ->
             should(err).not.be.ok
@@ -127,20 +134,22 @@ describe "jsonConcat options", () ->
             done()
 
     it ".dest defaults to 'concat.json' if not defined", (done) ->
-        defaultPath = process.cwd() + "/concat.json"
+        defaultPath = path.join process.cwd(), "concat.json"
         if (fs.existsSync(defaultPath))
             fs.unlinkSync(defaultPath)
         correct_result = require("./data/file.json")
-        jsonConcat src: __dirname + "/data/file.json" , (err, json) ->
+        jsonConcat
+            src: path.join(__dirname, "data/file.json")
+        , (err, json) ->
             should(err).not.be.ok
             should(require(defaultPath)).eql(correct_result)
             done()
 
     it ".middleware, if true, makes it be usable in Connect/Express", (done) ->
         correct_result = require("./data/file.json")
-        destpath = __dirname + "/_test_middleware.json"
+        destpath = path.join __dirname, "middleware.json"
         middlewareFunc = jsonConcat 
-            src: __dirname + "/data/file.json",
+            src: path.join(__dirname, "data/file.json"),
             dest: destpath,
             middleware: true
         req = { }

@@ -1,8 +1,12 @@
 # npm-installed modules
 node_modules/
 
+# files generated from coffeescript
+lib/
+
 # files created during testing
 .test*
+concat.json
 
 # istanbul coverage
 coverage/
