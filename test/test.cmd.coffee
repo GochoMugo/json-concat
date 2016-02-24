@@ -24,13 +24,13 @@ wrap = (filepath) ->
 describe "json-concat command", () ->
     this.timeout 0
 
-    it "exit with an error if only one arg is passed", (done) ->
+    it "exit with an error code 1 if only one arg is passed", (done) ->
         outputFile = path.join process.cwd(), ".test/ignore.json"
         fs.unlinkSync(outputFile) if fs.existsSync(outputFile)
-        ret = shelljs.exec cmd + outputFile, (code, output) ->
+        ret = shelljs.exec cmd + outputFile, (code, output, stderr) ->
             should(code).eql(1)
             should(fs.existsSync(outputFile)).eql(false)
-            should(output).containEql("No need")
+            should(stderr).containEql("No need")
             done()
 
     it "assumes last arg is the output file", (done) ->
