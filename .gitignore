@@ -1,13 +1,8 @@
 # npm-installed modules
 node_modules/
 
-# distribution/compiled files
-dist/
-_test/
-
 # files created during testing
-concat.json
-_test*
+.test*
 
 # istanbul coverage
 coverage/
